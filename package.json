@@ -16,7 +16,8 @@
     "test": "jest --config ./jest.config.js",
     "cy:open": "cypress open",
     "develop": "webpack --env.mode=development --watch",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "serveExamples": "serve ./"
   },
   "author": "JanCizmar",
   "license": "ISC",
@@ -62,6 +63,7 @@
     "react-multi-select-component": "^3.0.4",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "^0.13.7",
+    "serve": "^11.3.2",
     "ts-jest": "^26.4.1",
     "ts-loader": "^6.2.2",
     "tslint": "~5.15.0",

@@ -4,12 +4,27 @@ import {Properties} from "../Properties";
 import {POLYGLOAT_ATTRIBUTE_NAME} from "../Constants/Global";
 import {TranslationHighlighter} from "../highlighter/TranslationHighlighter";
 import {NodeHelper} from "../helpers/NodeHelper";
+import {EventService} from "./EventService";
+import {EventEmitterImpl} from "./EventEmitter";
 
 @scoped(Lifecycle.ContainerScoped)
 export class ElementRegistrar {
     private registeredElements: Set<ElementWithMeta> = new Set();
 
-    constructor(private properties: Properties, private translationHighlighter: TranslationHighlighter) {
+    constructor(private properties: Properties, private translationHighlighter: TranslationHighlighter, private eventService: EventService) {
+    }
+
+    findAllByKey(key: string) {
+        const result: ElementWithMeta[] = [];
+        for (const registeredElement of this.registeredElements) {
+            for (const node of registeredElement._polygloat.nodes) {
+                if (node._polygloat.keys.findIndex(keyWithParams => keyWithParams.key === key) > -1) {
+                    result.push(registeredElement);
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     register(element: ElementWithMeta) {
@@ -20,6 +35,7 @@ export class ElementRegistrar {
             this.translationHighlighter.listen(element);
         }
         this.registeredElements.add(element);
+        (this.eventService.ELEMENT_REGISTERED as EventEmitterImpl<ElementWithMeta>).emit(element);
     }
 
     refreshAll() {

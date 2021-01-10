@@ -9,12 +9,15 @@ import {TranslationHighlighter} from "../highlighter/TranslationHighlighter";
 import {createElement} from "@testFixtures/createElement";
 import {Properties} from "../Properties";
 import {POLYGLOAT_ATTRIBUTE_NAME} from "../Constants/Global";
+import {EventService} from "./EventService";
+import {EventEmitterImpl} from "./EventEmitter";
 
 describe("ElementRegistrar", () => {
     const getElementRegistrar = describeClassFromContainer(import("./ElementRegistrar"), "ElementRegistrar");
     let elementRegistrar: ReturnType<typeof getElementRegistrar>;
-
+    const mockElementRegisteredEmit = jest.fn();
     beforeEach(async () => {
+        (getMockedInstance(EventService).ELEMENT_REGISTERED as any) = {emit: mockElementRegisteredEmit} as any as EventEmitterImpl<ElementWithMeta>
         elementRegistrar = await getElementRegistrar();
         getMockedInstance(Properties).config.targetElement = document.body;
     });
@@ -32,6 +35,11 @@ describe("ElementRegistrar", () => {
         test("will be registered for highlighting in development mode", () => {
             expect(getMockedInstance(TranslationHighlighter).listen).toBeCalledWith(element);
             expect(getMockedInstance(TranslationHighlighter).listen).toBeCalledTimes(1);
+        });
+
+        test("will emit element registered event", () => {
+            expect(mockElementRegisteredEmit).toBeCalledTimes(1);
+            expect(mockElementRegisteredEmit).toBeCalledWith(element);
         });
     });
 

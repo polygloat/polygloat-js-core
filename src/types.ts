@@ -40,6 +40,9 @@ export type ElementMeta = {
     nodes: Set<NodeWithMeta>,
     listeningForHighlighting?: boolean,
     removeAllEventListeners?: () => void;
+    highlight?: () => void;
+    unhighlight?: () => void;
+    initialBackgroundColor?: string;
 }
 
 export type NodeMeta = { oldTextContent: string, keys: KeyAndParams[] };

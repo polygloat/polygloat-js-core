@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+To run this example add some API key into configuration.
+
+<div id="target">
+</div>
+</body>
+<script src="/dist/polygloat.window.js"></script>
+<script>
+    const pg = new window["@polygloat/core"].Polygloat({
+        apiUrl: "https://app.polygloat.io",
+    });
+    pg.run();
+    pg.translate("hello").then(t => {
+        document.getElementById("target").innerText = t;
+    })
+</script>
+</html>

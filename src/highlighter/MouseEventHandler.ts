@@ -13,7 +13,6 @@ export class MouseEventHandler {
     private keysDown = new Set<ModifierKey>();
     private mouseOn: Set<ElementWithMeta> = new Set();
     private highlighted: ElementWithMeta;
-    private highlightedInitialBackgroundColor: string;
     private mouseOnChanged = new EventEmitterImpl<ElementWithMeta>();
     private keysChanged: EventEmitterImpl<boolean> = new EventEmitterImpl<boolean>();
 
@@ -79,14 +78,13 @@ export class MouseEventHandler {
     }
 
     private highlight() {
-        this.highlightedInitialBackgroundColor = this.getMouseOn().style.backgroundColor;
-        this.getMouseOn().style.backgroundColor = this.properties.config.highlightColor;
+        this.getMouseOn()._polygloat.highlight();
         this.highlighted = this.getMouseOn();
     }
 
     private unhighlight() {
         if (this.highlighted) {
-            this.highlighted.style.backgroundColor = this.highlightedInitialBackgroundColor;
+            this.highlighted._polygloat.unhighlight();
             this.highlighted = null;
         }
     }

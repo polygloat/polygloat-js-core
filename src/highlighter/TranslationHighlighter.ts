@@ -5,6 +5,7 @@ import {Properties} from '../Properties';
 import {EventService} from "../services/EventService";
 import {TranslationService} from "../services/TranslationService";
 import {MouseEventHandler} from "./MouseEventHandler";
+import {HighlightFunctionsInitializer} from "./HighlightFunctionsInitializer";
 
 @scoped(Lifecycle.ContainerScoped)
 export class TranslationHighlighter {
@@ -14,10 +15,13 @@ export class TranslationHighlighter {
                 private properties: Properties,
                 private eventService: EventService,
                 private translationService: TranslationService,
-                private mouseEventHandler: MouseEventHandler) {
+                private mouseEventHandler: MouseEventHandler,
+                private highlightFunctionInitializer: HighlightFunctionsInitializer
+    ) {
     }
 
     listen(element: ElementWithMeta & ElementCSSInlineStyle) {
+        this.highlightFunctionInitializer.initFunctions(element);
         this.mouseEventHandler.handle(element, async (e) => await this.translationEdit(e, element));
     }
 

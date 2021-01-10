@@ -11,6 +11,7 @@ import {CoreHandler} from "./handlers/CoreHandler";
 import {ElementRegistrar} from "./services/ElementRegistrar";
 import {NodeHelper} from "./helpers/NodeHelper";
 import {EventEmitterImpl} from "./services/EventEmitter";
+import {PluginManager} from "./toolsManager/PluginManager";
 
 export class Polygloat {
     private readonly container = rootContainer.createChildContainer();
@@ -22,6 +23,7 @@ export class Polygloat {
     private textService: TextService = this.container.resolve(TextService);
     private coreHandler: CoreHandler = this.container.resolve(CoreHandler);
     private elementRegistrar: ElementRegistrar = this.container.resolve(ElementRegistrar);
+    private pluginManager: PluginManager = this.container.resolve(PluginManager);
 
     constructor(config: PolygloatConfig) {
         this.container = rootContainer.createChildContainer();
@@ -49,6 +51,7 @@ export class Polygloat {
             this.observer.observe();
         }
         await this.translationService.loadTranslations();
+        await this.pluginManager.run();
         await this.refresh();
     }
 

@@ -15,7 +15,6 @@ describe("MouseEventHandler", () => {
     let mouseEventHandler: ReturnType<typeof getMouseEventHandler>;
     let mockedElement: ElementWithMeta;
     const key = "Alt";
-    const mockedColor = "rgb(0, 30, 50)"
 
     const mockedCallback = jest.fn();
     const mockedClick = new MouseEvent("click");
@@ -23,14 +22,16 @@ describe("MouseEventHandler", () => {
     const mockedMouseOut = new MouseEvent("mouseout");
     const mockedKeydown = new KeyboardEvent("keydown", {key});
     const mockedKeyup = new KeyboardEvent("keyup", {key});
+    let mockedHighlight = jest.fn();
+    let mockedUnhighlight = jest.fn();
 
     beforeEach(async () => {
         mouseEventHandler = await getMouseEventHandler();
         mockedElement = document.createElement("div") as Element as ElementWithMeta;
-        mockedElement._polygloat = {} as ElementMeta;
+        mockedElement._polygloat = {highlight: mockedHighlight, unhighlight: mockedUnhighlight} as any as ElementMeta;
         mouseEventHandler.handle(mockedElement, mockedCallback);
         getMockedInstance(Properties).config.highlightKeys = [ModifierKey[key]];
-        getMockedInstance(Properties).config.highlightColor = mockedColor;
+
         mockedElement.dispatchEvent(mockedMouseOver);
         window.dispatchEvent(mockedKeydown);
     });
@@ -38,35 +39,29 @@ describe("MouseEventHandler", () => {
     describe("highlighting", () => {
 
         test("Will highlight", async () => {
-            expect(mockedElement.style.backgroundColor).toEqual(mockedColor);
+            expect(mockedHighlight).toBeCalledTimes(1);
         });
 
 
         test("Will unhighlight", async () => {
             mockedElement.dispatchEvent(mockedMouseOut);
-            expect(mockedElement.style.backgroundColor).toEqual("");
-        });
-
-        test("Will reset to correct initial color", async () => {
-            mockedElement.dispatchEvent(mockedMouseOut);
-            mockedElement.style.backgroundColor = "#222222"
-            mockedElement.dispatchEvent(mockedMouseOver);
-            mockedElement.dispatchEvent(mockedMouseOut);
-            expect(mockedElement.style.backgroundColor).toEqual("rgb(34, 34, 34)");
+            expect(mockedUnhighlight).toBeCalled();
         });
 
         test("Will not highlight just on mouseover", async () => {
             mockedElement.dispatchEvent(mockedMouseOut);
             window.dispatchEvent(mockedKeyup);
+            mockedHighlight = jest.fn();
             mockedElement.dispatchEvent(mockedMouseOver);
-            expect(mockedElement.style.backgroundColor).toEqual("");
+            expect(mockedHighlight).toBeCalledTimes(0);
         });
 
         test("Will not highlight just on keydown", async () => {
             window.dispatchEvent(mockedKeyup);
             mockedElement.dispatchEvent(mockedMouseOut);
+            mockedHighlight = jest.fn();
             window.dispatchEvent(mockedKeydown)
-            expect(mockedElement.style.backgroundColor).toEqual("");
+            expect(mockedHighlight).toBeCalledTimes(0);
         });
 
 
@@ -75,7 +70,7 @@ describe("MouseEventHandler", () => {
             mockedElement.dispatchEvent(mockedMouseOut);
             window.dispatchEvent(mockedKeydown);
             mockedElement.dispatchEvent(mockedMouseOver);
-            expect(mockedElement.style.backgroundColor).toEqual(mockedColor);
+            expect(mockedHighlight).toBeCalled();
         });
 
         test("Will not handle single element multiple times", async () => {
