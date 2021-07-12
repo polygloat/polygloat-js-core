@@ -22,7 +22,7 @@
     "@tolgee/core": "^1.0.0-alpha.44",
     "@tolgee/ngx": "^1.0.0-alpha.44",
     "@tolgee/ui": "^1.0.0-alpha.44",
-    "@types/react": "^16.9.55",
+    "@types/react": "^17.0.14",
     "rxjs": "~6.6.3",
     "serve": "^11.3.2",
     "tslib": "^2.0.0",

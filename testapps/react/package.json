@@ -10,7 +10,7 @@
     "@tolgee/ui": "^1.0.0-alpha.44",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.62",
-    "@types/react": "17.0.1",
+    "@types/react": "17.0.14",
     "@types/react-dom": "^17.0.1",
     "concurrently": "^5.3.0",
     "react": "^17.0.1",
